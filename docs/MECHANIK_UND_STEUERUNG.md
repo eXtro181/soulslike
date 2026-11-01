@@ -1,5 +1,7 @@
 # Spielmechanik und Steuerung – Werte und Nachbau-Anleitung
 
+> **Altdokument (Vorgänger *Throne of the Drowned*).** Eclipse Ashes hat Piraten- und Seemechaniken entfernt; das aktuelle Spiel beschreibt [`ECLIPSE_ASHES.md`](ECLIPSE_ASHES.md). Dieses Dokument bleibt als Referenz für Lore, Figuren und Werte.
+
 Gegenstück zu `docs/GRAFIK_ANLEITUNG.md`: alle Spielregeln von *Throne of the Drowned* mit den exakten Zahlen aus dem Code (Stand Commit `ffda89f`, übernommen aus `eXtro181/PirateGame`). Wer ein neues Projekt auf dieser Grundlage baut, kann Kampf, Werte, Gegner, Bosse, Seefahrt und Steuerung damit 1:1 nachbilden. In Klammern steht jeweils die Fundstelle im Code.
 
 Einheiten: Weltpixel (32 px je Kachel), Sekunden, Bogenmaß. `S = 2.0` ist der Maßstab gegenüber der alten 16-px-Version (`src/game/actors.rs`); Gegnerwerte in `data.rs` werden über `en(..)` bei Tempo, Sichtweite und Reichweite automatisch ×2 genommen.

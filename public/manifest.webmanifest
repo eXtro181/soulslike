@@ -1,7 +1,7 @@
 {
-  "name": "Schwarzwasser",
-  "short_name": "Schwarzwasser",
-  "description": "Ein Soulslike-Piratenspiel in Pixel-Art.",
+  "name": "Eclipse Ashes",
+  "short_name": "Eclipse Ashes",
+  "description": "Ein 2D-Dark-Fantasy-Soulslike in HD-Pixelart.",
   "start_url": "./",
   "scope": "./",
   "display": "fullscreen",

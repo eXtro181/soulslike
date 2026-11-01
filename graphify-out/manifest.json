@@ -6,9 +6,9 @@
     "semantic_hash": ""
   },
   "Cargo.toml": {
-    "mtime": 1793542572.3341832,
-    "seen": 1793542670.945368,
-    "ast_hash": "c59d77dd7875ce4cce896a46f105f1dd",
+    "mtime": 1793553538.8792746,
+    "seen": 1793554386.6629407,
+    "ast_hash": "1d13dfc1b1b54c0144f4bef49a25e1eb",
     "semantic_hash": ""
   },
   "build.sh": {
@@ -90,9 +90,9 @@
     "semantic_hash": ""
   },
   "crates/art/src/lib.rs": {
-    "mtime": 1793542572.3373122,
-    "seen": 1793542670.945383,
-    "ast_hash": "de726f517715005a480b73b2299ae3e9",
+    "mtime": 1793552761.7128909,
+    "seen": 1793554386.6629665,
+    "ast_hash": "9e94fb7fc2c4df7bea0478f03ebd29f2",
     "semantic_hash": ""
   },
   "crates/art/src/light.rs": {
@@ -156,99 +156,39 @@
     "semantic_hash": ""
   },
   "src/art.rs": {
-    "mtime": 1793542572.342694,
-    "seen": 1793542670.9453921,
-    "ast_hash": "227be53b77f909e5bad9e01c1050d734",
+    "mtime": 1793553187.0085938,
+    "seen": 1793554386.6629906,
+    "ast_hash": "32a8b85051b07fd99e365a6d8bf0bf8d",
     "semantic_hash": ""
   },
   "src/audio.rs": {
-    "mtime": 1793542572.3431265,
-    "seen": 1793542670.945393,
-    "ast_hash": "27959d035610aebcaeddad3420936527",
-    "semantic_hash": ""
-  },
-  "src/game/actors.rs": {
-    "mtime": 1793542572.3431265,
-    "seen": 1793542670.945394,
-    "ast_hash": "5d7867574a6e064fa1c0224b2f2fec7b",
-    "semantic_hash": ""
-  },
-  "src/game/boss.rs": {
-    "mtime": 1793542572.3436606,
-    "seen": 1793542670.9453948,
-    "ast_hash": "bf5b2b80f2ab7006b4eaafc15726f14b",
-    "semantic_hash": ""
-  },
-  "src/game/crew.rs": {
-    "mtime": 1793542572.3436606,
-    "seen": 1793542670.9453955,
-    "ast_hash": "20525cedb2572b1833fc8d3baa1b60d2",
-    "semantic_hash": ""
-  },
-  "src/game/critters.rs": {
-    "mtime": 1793542572.3436606,
-    "seen": 1793542670.9453962,
-    "ast_hash": "7ccd0569503e26ec3772c02ee0b7a8ea",
-    "semantic_hash": ""
-  },
-  "src/game/data.rs": {
-    "mtime": 1793542572.3436606,
-    "seen": 1793542670.9453971,
-    "ast_hash": "057505e50efe3b47a62f83ad29bf7b33",
-    "semantic_hash": ""
-  },
-  "src/game/dialog.rs": {
-    "mtime": 1793542572.3436606,
-    "seen": 1793542670.945398,
-    "ast_hash": "35bb9cea8a1d9c7122cb5a564b186601",
-    "semantic_hash": ""
-  },
-  "src/game/draw.rs": {
-    "mtime": 1793542572.3436606,
-    "seen": 1793542670.9453988,
-    "ast_hash": "fb8cf1aed750d326e480117a1ecc6571",
-    "semantic_hash": ""
-  },
-  "src/game/endboss.rs": {
-    "mtime": 1793542572.344971,
-    "seen": 1793542670.9453995,
-    "ast_hash": "a8a5272fd9d693fe7f32ffef5aa2b720",
+    "mtime": 1793553475.0732954,
+    "seen": 1793554386.6629918,
+    "ast_hash": "412d8b673b71bdfdb6d5dc21b60b6d9c",
     "semantic_hash": ""
   },
   "src/game/env.rs": {
-    "mtime": 1793542572.344971,
-    "seen": 1793542670.9454002,
-    "ast_hash": "b784d97327d95aa3829173ccee724ba8",
+    "mtime": 1793554020.4161508,
+    "seen": 1793554386.6629937,
+    "ast_hash": "e8a7373b5bb83e49cda8373e24fef5d0",
     "semantic_hash": ""
   },
   "src/game/fx.rs": {
-    "mtime": 1793542572.344971,
-    "seen": 1793542670.9454012,
-    "ast_hash": "f6bc843b6db53c9232aea4b20db7557d",
+    "mtime": 1793553527.9590898,
+    "seen": 1793554386.6629963,
+    "ast_hash": "b5198abe0b12a3d1a2dd65625c8b9517",
     "semantic_hash": ""
   },
   "src/game/input.rs": {
-    "mtime": 1793542572.344971,
-    "seen": 1793542670.945402,
-    "ast_hash": "e5cc76a08b4a8f4fef16b88adb95f3d6",
+    "mtime": 1793552812.3524098,
+    "seen": 1793554386.6629984,
+    "ast_hash": "547a9c04a6f4d8140d03fd05988fae71",
     "semantic_hash": ""
   },
   "src/game/mod.rs": {
-    "mtime": 1793542572.344971,
-    "seen": 1793542670.9454029,
-    "ast_hash": "0ce9c446b1fefc3a64279bd09fd64b1f",
-    "semantic_hash": ""
-  },
-  "src/game/seaboss.rs": {
-    "mtime": 1793542572.344971,
-    "seen": 1793542670.9454036,
-    "ast_hash": "71964df9c14823db1af9dd28d075f3f5",
-    "semantic_hash": ""
-  },
-  "src/game/ship.rs": {
-    "mtime": 1793542572.3471715,
-    "seen": 1793542670.9454045,
-    "ast_hash": "ec06f8340cf2fa5dc8e225686e82300f",
+    "mtime": 1793554093.191873,
+    "seen": 1793554386.6630006,
+    "ast_hash": "42bd7ae2e1ebcd7486409dcd45625a9a",
     "semantic_hash": ""
   },
   "src/gfx/mod.rs": {
@@ -264,21 +204,15 @@
     "semantic_hash": ""
   },
   "src/main.rs": {
-    "mtime": 1793542572.3478591,
-    "seen": 1793542670.9454086,
-    "ast_hash": "bd4d2bea5e5bb8682b1d89bdf3d16f1d",
+    "mtime": 1793553861.762301,
+    "seen": 1793554386.6630042,
+    "ast_hash": "aa132f0400a1653d36e04f0d4642926b",
     "semantic_hash": ""
   },
   "src/prof.rs": {
-    "mtime": 1793542572.3478591,
-    "seen": 1793542670.9454093,
-    "ast_hash": "af04241b46bc9fde9b0e57e3c20355d1",
-    "semantic_hash": ""
-  },
-  "src/save.rs": {
-    "mtime": 1793542572.3478591,
-    "seen": 1793542670.94541,
-    "ast_hash": "606d9bb0af7d51579669cccd2b944b73",
+    "mtime": 1793553475.072866,
+    "seen": 1793554386.6630054,
+    "ast_hash": "33b875b1c1d00d6f13a68a85d1b8b8a8",
     "semantic_hash": ""
   },
   "src/synth.rs": {
@@ -287,88 +221,52 @@
     "ast_hash": "1528346335031b9dfb203d06518de9f0",
     "semantic_hash": ""
   },
-  "src/ui/hud.rs": {
-    "mtime": 1793542572.3478591,
-    "seen": 1793542670.9454117,
-    "ast_hash": "36c2cb92bc45f5cf1f996ad0bcb14f3c",
-    "semantic_hash": ""
-  },
-  "src/ui/menu.rs": {
-    "mtime": 1793542572.34936,
-    "seen": 1793542670.9454124,
-    "ast_hash": "de017f5300c5e5a417c3449812d7a475",
-    "semantic_hash": ""
-  },
   "src/ui/mod.rs": {
-    "mtime": 1793542572.34936,
-    "seen": 1793542670.9454134,
-    "ast_hash": "b29542e1f2cdd76e2bb2ed998ae48489",
+    "mtime": 1793552823.1817484,
+    "seen": 1793554386.6630085,
+    "ast_hash": "b09bf4f05c55e3f4d524936a6e7f43ec",
     "semantic_hash": ""
   },
   "src/ui/text.rs": {
-    "mtime": 1793542572.34936,
-    "seen": 1793542670.945414,
-    "ast_hash": "de92cb813e9242d54457b1037e7f9ed2",
-    "semantic_hash": ""
-  },
-  "src/ui/textinput.rs": {
-    "mtime": 1793542572.34936,
-    "seen": 1793542670.945415,
-    "ast_hash": "c3bd6c2209e9a15dbcb79af671900c9a",
-    "semantic_hash": ""
-  },
-  "src/ui/title.rs": {
-    "mtime": 1793542572.34936,
-    "seen": 1793542670.9454157,
-    "ast_hash": "2cd7b080e8007b0176d6d2e12b71a19a",
+    "mtime": 1793553497.2798555,
+    "seen": 1793554386.6630096,
+    "ast_hash": "70f8380c3a0cefb402c2c8420ef63d1d",
     "semantic_hash": ""
   },
   "src/ui/touch.rs": {
-    "mtime": 1793542572.34936,
-    "seen": 1793542670.9454165,
-    "ast_hash": "51000ba7414a0ad1b5ee65516f9606dc",
-    "semantic_hash": ""
-  },
-  "src/world/mod.rs": {
-    "mtime": 1793542572.34936,
-    "seen": 1793542670.945417,
-    "ast_hash": "a459e221caebe6b4e0106fa91469e762",
-    "semantic_hash": ""
-  },
-  "src/world/view.rs": {
-    "mtime": 1793542572.3520188,
-    "seen": 1793542670.9454176,
-    "ast_hash": "19adf2ad84d8218a9ed417e9744a5f2b",
+    "mtime": 1793552829.8911638,
+    "seen": 1793554386.6630108,
+    "ast_hash": "e5f1074e57e6f6f7b316533dc4abaa25",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1793543126.3928967,
-    "seen": 1793543137.867811,
-    "ast_hash": "137ff035ea813396ce9154a427af9a15",
+    "mtime": 1793554342.5049849,
+    "seen": 1793554386.6630177,
+    "ast_hash": "7a5485d2d418bc884a8a1302d7ee9179",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1793543116.5738072,
-    "seen": 1793543137.8678126,
-    "ast_hash": "dd0c72417a137f5d8b84d42274088708",
+    "mtime": 1793554356.2369857,
+    "seen": 1793554386.6630187,
+    "ast_hash": "8fdf62d3513768d7a910c12f3d8a685a",
     "semantic_hash": ""
   },
   "docs/GRAFIK_ANLEITUNG.md": {
-    "mtime": 1793542572.3394845,
-    "seen": 1793542670.9454205,
-    "ast_hash": "78c2861e0f5414349d27a7f691075cd8",
+    "mtime": 1793554362.2465136,
+    "seen": 1793554386.6630208,
+    "ast_hash": "4ff3f92d42205e8ebb1f7205b536054f",
     "semantic_hash": ""
   },
   "docs/SPIELKONZEPT.md": {
-    "mtime": 1793543121.5959003,
-    "seen": 1793543137.8678176,
-    "ast_hash": "8ea4b45e96c0ef4a7465fc348ea5ddab",
+    "mtime": 1793554362.2101803,
+    "seen": 1793554386.6630256,
+    "ast_hash": "39113b31eed2cc852678e527b17a12ca",
     "semantic_hash": ""
   },
   "web/index.html": {
-    "mtime": 1793542572.3520188,
-    "seen": 1793542670.9454224,
-    "ast_hash": "016cf4ecbb8be09569450f3a46a9992c",
+    "mtime": 1793553698.9477415,
+    "seen": 1793554386.6630266,
+    "ast_hash": "f35ac0c230802806b182f834c1082422",
     "semantic_hash": ""
   },
   "public/icon-180.png": {
@@ -396,15 +294,81 @@
     "semantic_hash": ""
   },
   "docs/GRAPHIFY.md": {
-    "mtime": 1793543097.5475156,
-    "seen": 1793543137.867816,
-    "ast_hash": "dd73116149bf6f71d96bd5b4df7dc26c",
+    "mtime": 1793554362.252986,
+    "seen": 1793554386.663023,
+    "ast_hash": "962266ed0a263c785ae6db990d4152c6",
     "semantic_hash": ""
   },
   "docs/MECHANIK_UND_STEUERUNG.md": {
-    "mtime": 1793543055.1835132,
-    "seen": 1793543137.8678164,
-    "ast_hash": "fdb46e23c6e0816b66b0116fb37b1b5b",
+    "mtime": 1793554362.228986,
+    "seen": 1793554386.6630244,
+    "ast_hash": "cf737e4fdb9e5065672f11842b5abc3f",
+    "semantic_hash": ""
+  },
+  "crates/art/src/side.rs": {
+    "mtime": 1793553967.2983646,
+    "seen": 1793554386.6629777,
+    "ast_hash": "86f8df44ea993a75109091e41f3fbf8f",
+    "semantic_hash": ""
+  },
+  "src/game/fight.rs": {
+    "mtime": 1793553428.8503847,
+    "seen": 1793554386.6629946,
+    "ast_hash": "017210912993a93fa2eedcc252721d92",
+    "semantic_hash": ""
+  },
+  "src/game/hud.rs": {
+    "mtime": 1793553339.3636496,
+    "seen": 1793554386.6629972,
+    "ast_hash": "1241b9e95b0b27fc870c8eb7b7e047b5",
+    "semantic_hash": ""
+  },
+  "src/game/level.rs": {
+    "mtime": 1793554254.7289796,
+    "seen": 1793554386.6629996,
+    "ast_hash": "bd595bd706639e73415927b990312c23",
+    "semantic_hash": ""
+  },
+  ".claude/skills/ponytail-audit/SKILL.md": {
+    "mtime": 1793551960.3799067,
+    "seen": 1793554386.6630118,
+    "ast_hash": "4a8ec0358488fe552500e549503771b4",
+    "semantic_hash": ""
+  },
+  ".claude/skills/ponytail-debt/SKILL.md": {
+    "mtime": 1793551960.3833387,
+    "seen": 1793554386.663013,
+    "ast_hash": "f5ddc8835fd59d3df8eedef0e1228348",
+    "semantic_hash": ""
+  },
+  ".claude/skills/ponytail-gain/SKILL.md": {
+    "mtime": 1793551960.3868906,
+    "seen": 1793554386.663014,
+    "ast_hash": "9f71b76a7b488bc15d89f76afc54e2ac",
+    "semantic_hash": ""
+  },
+  ".claude/skills/ponytail-help/SKILL.md": {
+    "mtime": 1793551960.390175,
+    "seen": 1793554386.6630147,
+    "ast_hash": "d3d4e52b80e65a6972d1c20378356d63",
+    "semantic_hash": ""
+  },
+  ".claude/skills/ponytail-review/SKILL.md": {
+    "mtime": 1793551960.375852,
+    "seen": 1793554386.6630154,
+    "ast_hash": "9a06da6e1f26722dd3c34b50489a1c1e",
+    "semantic_hash": ""
+  },
+  ".claude/skills/ponytail/SKILL.md": {
+    "mtime": 1793551960.371401,
+    "seen": 1793554386.6630166,
+    "ast_hash": "546be8ebd490e5b8d3b291c33442641a",
+    "semantic_hash": ""
+  },
+  "docs/ECLIPSE_ASHES.md": {
+    "mtime": 1793553769.5409508,
+    "seen": 1793554386.6630197,
+    "ast_hash": "4e0001a33fc8f2c382e7b1764e0fea75",
     "semantic_hash": ""
   }
 }

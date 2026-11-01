@@ -1,6 +1,6 @@
 # Graphify-Abbild des Codes
 
-Das Verzeichnis `graphify-out/` enthält den vollständigen Code-Graphen von *Throne of the Drowned*, erzeugt mit [Graphify](https://pypi.org/project/graphifyy/) (`graphifyy` 0.9.100, reine AST-Auswertung, ohne KI-Kosten). Er zeigt alle Dateien, Typen, Funktionen und Methoden mit ihren Aufrufen, Importen und Verweisen, gruppiert in Gemeinschaften (Communities).
+Das Verzeichnis `graphify-out/` enthält den vollständigen Code-Graphen von *Eclipse Ashes*, erzeugt mit [Graphify](https://pypi.org/project/graphifyy/) (`graphifyy` 0.9.100, reine AST-Auswertung, ohne KI-Kosten). Er zeigt alle Dateien, Typen, Funktionen und Methoden mit ihren Aufrufen, Importen und Verweisen, gruppiert in Gemeinschaften (Communities).
 
 | Datei | Inhalt |
 |---|---|
@@ -10,8 +10,8 @@ Das Verzeichnis `graphify-out/` enthält den vollständigen Code-Graphen von *Th
 | `graphify-out/manifest.json` | Hash je Quelldatei (zeigt, ob der Graph veraltet ist) |
 
 ## Stand
-- Lokal erzeugt aus diesem Repo, Commit-Stand des Spielcodes `ffda89f` (identisch mit `eXtro181/PirateGame` `main`): rund 2 010 Knoten, 5 610 Kanten, 76 Gemeinschaften (Code und Anleitungen). Die WGSL-Shader (`src/gfx/shaders/*.wgsl`) und TOML-Dateien versteht Graphify nicht; sie stehen im Wortlaut in `docs/GRAFIK_ANLEITUNG.md` (Anhang).
-- Zum Vergleich der gehostete Graphify-Index von `eXtro181/PirateGame` (Build `c69d885c`, Commit `ffda89f`, Pipeline `production-v1`): 1 507 Knoten, 4 894 Kanten, 55 Gemeinschaften. Er beschreibt denselben Code mit einem anderen Extraktor; sobald `eXtro181/soulslike` im Graphify-Arbeitsbereich indiziert ist, liefert der MCP-Server (`query_graph`, `graphify_callers`, `graphify_impact` …) dasselbe für dieses Repo.
+- Aktuell (Eclipse Ashes, 01.11.): rund 1 360 Knoten, 3 500 Kanten, 72 Gemeinschaften aus 58 Dateien (Code und Anleitungen). Die WGSL-Shader (`src/gfx/shaders/*.wgsl`) und TOML-Dateien versteht Graphify nicht; sie stehen im Wortlaut in `docs/GRAFIK_ANLEITUNG.md` (Anhang).
+- Das Abbild des Vorgängers *Throne of the Drowned* (Commit `ffda89f`, rund 2 010 Knoten) liegt in der Git-Historie dieses Repos (Commit „Klon von PirateGame als Grundlage …“). Der gehostete Graphify-Index von `eXtro181/PirateGame` (Build `c69d885c`, 1 507 Knoten, 4 894 Kanten, 55 Gemeinschaften) beschreibt ebenfalls den Vorgänger; sobald `eXtro181/soulslike` im Graphify-Arbeitsbereich indiziert ist, liefert der MCP-Server (`query_graph`, `graphify_callers`, `graphify_impact` …) dasselbe für dieses Repo.
 
 ## Benutzen
 ```bash
@@ -33,9 +33,8 @@ python3 -m venv .venv-graphify && .venv-graphify/bin/pip install graphifyy==0.9.
 
 ## Wichtige Knotenpunkte (Einstieg)
 - `src/main.rs` `tick()` / `setup()` – Bildschleife und Start
-- `src/game/mod.rs` `Game` – Spielablauf; `src/game/actors.rs` Spieler/Gegner
-- `src/gfx/mod.rs` `Frame` – Zeichenlisten (meistverbundener Typ), `src/gfx/render.rs` Renderer
-- `src/art.rs` `Art` – Atlanten; `crates/art/src/canvas.rs` `Canvas`, `rig.rs` `Rig`, `terrain.rs`
-- `src/world/mod.rs` `World`, `src/world/view.rs` Streaming
+- `src/game/mod.rs` `Game` – Spielablauf; `src/game/fight.rs` Spieler, Gegner und Barnaby; `src/game/level.rs` Karte und Kollision
+- `src/gfx/mod.rs` `Frame` – Zeichenlisten, `src/gfx/render.rs` Renderer
+- `src/art.rs` `Art` – Atlas; `crates/art/src/canvas.rs` `Canvas` (meistverbundener Typ), `side.rs` Kacheln, `chars.rs` Figuren, `rig.rs` `Rig`
 
 Der Ordner `graphify-out/cache/` wird nicht eingecheckt (`.gitignore`), er entsteht beim nächsten `update` neu.

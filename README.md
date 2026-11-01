@@ -1,35 +1,32 @@
-# Throne of the Drowned
+# Eclipse Ashes
 
-Ein düsteres Soulslike-Piratenspiel im Browser in **HD-Pixelart** mit HD-2D-Look (Diorama-Kippung, Tiefenschärfe, Punktlichter, Nebel). Geschrieben in **Rust mit Bevy 0.16** und eigenem wgpu-Renderer (WebGL2). Alle Grafiken, Musik und Klänge entstehen beim Start aus Code – es gibt keine Bild- oder Audiodateien.
+Ein 2D-Dark-Fantasy-Soulslike / Metroidvania im Browser in **HD-Pixelart**: dynamisches Licht mit Normalmaps, mehrlagige Parallax-Kulisse, Aschepartikel. Geschrieben in **Rust mit Bevy 0.16** und eigenem wgpu-Renderer (WebGL2). Alle Grafiken, Musik und Klänge entstehen beim Start aus Code – es gibt keine Bild- oder Audiodateien.
 
-Live (Original): https://extro181.github.io/PirateGame/
-
-> Dieses Repo ist ein vollständiger Klon von [`eXtro181/PirateGame`](https://github.com/eXtro181/PirateGame) – Code mit ganzer Git-Historie, alle Anleitungen und das Graphify-Abbild – als Grundlage für ein neues Projekt. Einstieg: [`CLAUDE.md`](CLAUDE.md), [`docs/MECHANIK_UND_STEUERUNG.md`](docs/MECHANIK_UND_STEUERUNG.md), [`docs/GRAFIK_ANLEITUNG.md`](docs/GRAFIK_ANLEITUNG.md), [`docs/GRAPHIFY.md`](docs/GRAPHIFY.md).
+Hervorgegangen aus *Throne of the Drowned* ([`eXtro181/PirateGame`](https://github.com/eXtro181/PirateGame), Historie in diesem Repo): Die Piraten- und Seemechaniken sind entfernt, das Meer ist zu Pech und Asche geworden, die Schiffe liegen versteinert in den Klippen.
 
 ## Das Spiel
 
-- Du erwachst in einem Sarg auf dem **Galgenstrand**, einem Piratenfriedhof. Von der Festung **Glutwacht** aus segelst du zu vier Inseln mit je einem Geisterkönig (zwei Gestalten) und durch vier elementare Seegebiete mit je einem Seeungeheuer, das bei halber Kraft zum Piratenschiff wird.
-- Galionsfiguren der Könige auf die Throne, alle Seeungeheuer versenkt – dann öffnet sich der **Strudel**, Krakenarme ziehen dein Schiff hinab ans **Ende der Welt**: Seeschlacht gegen den Fliegenden Holländer und seinen roten Kraken, das Meer läuft über den Rand, und am Grund wartet **Malakor, der Ertrunkene König**. Danach Neues Spiel+.
-- Siedlungen mit begehbaren Läden, Crew mit eigenen Geschützen, Schiffsausbauten, Höhenebenen mit Hängen und Naturwegen, Profile mit verschlüsselten Spielständen (PBKDF2 + AES-GCM).
+- Strikt lineare, vertikale Schläuche mit Engstellen, Schleifen und freischaltbaren Abkürzungen – keine offene Welt.
+- Schneller, aggressiver Kampf: Rolle mit bildgenauen Unverwundbarkeits-Frames, Schild und Parade, Haltungsbruch und Hinrichtungen.
+- **Aschenkünste** (Kriegsasche) und **Prägungen** an der Waffe, am Ascheschrein bei Corvus tauschbar; Katha steigert die Stufen gegen Asche.
+- Spielbar: **Zone 01 – Die Aschenen Klippen von Calamita** mit Aschen-Marodeur, Rost-Skelett und Schlick-Krabbler, dem Miniboss *Zertrümmerter Gallions-Schütze* und **Kapitän Barnaby, dem Aschen-Vogt** (zwei Phasen). Geplant: 15 Zonen mit 15 Hauptbossen.
 
-Das vollständige Spielkonzept (Idee, Welt, Systeme, Grafik, Klang, Technik) steht in [`docs/SPIELKONZEPT.md`](docs/SPIELKONZEPT.md), die Grafik bis ins Detail mit Nachbau-Anleitung in [`docs/GRAFIK_ANLEITUNG.md`](docs/GRAFIK_ANLEITUNG.md), alle Spielregeln, Werte und die Steuerung in [`docs/MECHANIK_UND_STEUERUNG.md`](docs/MECHANIK_UND_STEUERUNG.md), die ursprüngliche Grafik-Spezifikation in [`docs/GRAFIK_SPEZIFIKATION.md`](docs/GRAFIK_SPEZIFIKATION.md) und der Code-Graph in [`docs/GRAPHIFY.md`](docs/GRAPHIFY.md).
+Konzept, alle Zonen, Bosse, Werte und Baustand: [`docs/ECLIPSE_ASHES.md`](docs/ECLIPSE_ASHES.md). Technische Kurzreferenz: [`CLAUDE.md`](CLAUDE.md).
 
 ## Steuerung
 
 | Taste | Aktion |
 |---|---|
-| WASD / Pfeile | Laufen (auf See: lenken, ↑↓ Segel) |
-| J · L | Hieb · schwerer Hieb (auf See: Breitseite links · rechts) |
-| Leertaste | Rolle |
-| Q | Parieren |
-| R · 1 · 2 | Rum · Gürtel 1 · Gürtel 2 |
-| K | Pistole |
-| C · X | Zauber wirken · wechseln (auf See: Crew-Geschütz) |
-| Tab | Gegner fixieren |
-| E | Interagieren, rasten, an Bord, anlegen |
-| F | Shanty auf See |
-| Alt | Namen aller Gegenstände |
-| M · H · I · Esc | Seekarte · Steuerung · Fortschritt · Menü |
+| A D / Pfeile | Laufen |
+| W S | Leitern |
+| Leertaste | Springen (S + Leertaste: durch Planken fallen) |
+| Umschalt / K | Rolle |
+| J · L | leichter · schwerer Hieb (J am gebrochenen Gegner: Hinrichtung) |
+| Q halten | Schild, kurz vor dem Treffer: Parade |
+| C | Aschenkunst |
+| R | Aschentrank |
+| E | Rasten, Winde, Aufheben |
+| Esc | Pause |
 
 iPhone: Touch-Steuerung (Stick links, Knöpfe rechts).
 
@@ -37,8 +34,12 @@ iPhone: Touch-Steuerung (Stick links, Knöpfe rechts).
 
 ```bash
 cargo build --target wasm32-unknown-unknown --profile fast
-PROFILE=fast WASM_BINDGEN=/pfad/zu/wasm-bindgen ./build.sh   # erzeugt dist/
+```
+```bash
+PROFILE=fast WASM_BINDGEN=/pfad/zu/wasm-bindgen ./build.sh
+```
+```bash
 cd dist && python3 -m http.server 8790
 ```
 
-`wasm-bindgen` in der Version aus `Cargo.lock`. Testspiele ohne Profil: `?debug&start=hain` (weitere Parameter in `CLAUDE.md`).
+`wasm-bindgen` in der Version aus `Cargo.lock` (0.2.129). Testlauf direkt im Spiel: `?play`, Boss-Arena: `?play&pos=40,11`.

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0B1016">
-<title>Throne of the Drowned</title>
+<title>Eclipse Ashes</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <style>
@@ -13,12 +13,12 @@ html, body { margin: 0; height: 100%; background: #0B1016; overflow: hidden; tou
 #wrap { position: fixed; inset: 0; }
 canvas#bevy { display: block; width: 100%; height: 100%; outline: none; image-rendering: pixelated; }
 #load { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #8FA3A8; font: 16px/1.4 Georgia, serif; letter-spacing: .2em; pointer-events: none; }
-#load b { color: #5FF2C8; font-weight: normal; font-size: 28px; letter-spacing: .3em; margin-bottom: 12px; }
+#load b { color: #E8A443; font-weight: normal; font-size: 28px; letter-spacing: .3em; margin-bottom: 12px; }
 </style>
 </head>
 <body>
 <div id="wrap"><canvas id="bevy" tabindex="0"></canvas></div>
-<div id="load"><b>THRONE OF THE DROWNED</b><span id="loadmsg">Die Gezeiten erwachen …</span></div>
+<div id="load"><b>ECLIPSE ASHES</b><span id="loadmsg">Die Asche erwacht …</span></div>
 <script type="module">
 import init from './schwarzwasser.js';
 init().catch(e => { if (!String(e).includes('Using exceptions for control flow')) { document.getElementById('loadmsg').textContent = 'Fehler: ' + e; console.error(e); } });

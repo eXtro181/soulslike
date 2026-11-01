@@ -1,5 +1,7 @@
 # Throne of the Drowned – Spielkonzept
 
+> **Altdokument (Vorgänger *Throne of the Drowned*).** Eclipse Ashes hat Piraten- und Seemechaniken entfernt; das aktuelle Spiel beschreibt [`ECLIPSE_ASHES.md`](ECLIPSE_ASHES.md). Dieses Dokument bleibt als Referenz für Lore, Figuren und Werte.
+
 Gesamtdokument zu Idee, Spielablauf, Welt, Figuren, Systemen, Grafik, Klang und Technik.
 Stand: 1. November 2026 (Version 0.6, Zweig `perf`). Technische Kurzreferenz für die Entwicklung: `CLAUDE.md`.
 

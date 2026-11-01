@@ -7,7 +7,6 @@ use std::cell::RefCell;
 pub const UPDATE: usize = 0;
 pub const DRAW: usize = 1;
 pub const UI: usize = 2;
-pub const BAKE: usize = 3;
 pub const PACK: usize = 4;
 pub const UPLOAD: usize = 5;
 pub const AUDIO: usize = 6;
@@ -56,10 +55,6 @@ pub fn add(k: usize, ms: f64) {
         p.acc[k] += ms;
         p.max[k] = p.max[k].max(ms);
     });
-}
-
-pub fn baked(n: u32) {
-    P.with(|p| p.borrow_mut().bakes += n);
 }
 
 pub fn quads(n: usize) {

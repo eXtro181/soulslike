@@ -1,5 +1,7 @@
 # Grafik von Throne of the Drowned – Analyse und 1:1-Anleitung für ein neues Projekt
 
+> **Hinweis für Eclipse Ashes:** Renderer, Leinwand, Atlas, Figuren- und Kreaturen-Rig gelten unverändert. Eclipse Ashes nutzt die Seitenansicht: Diorama-Kippung, Tiefenschärfe und Sonnenschatten sind abgeschaltet, der Boden besteht aus Kacheln (`crates/art/src/side.rs`) statt gebackener Chunks, die Kulisse ist selbstleuchtend (`flags::GLOW`). Siehe `CLAUDE.md` und [`ECLIPSE_ASHES.md`](ECLIPSE_ASHES.md) Abschnitt 7.
+
 Stand: 1. November 2026. Dieses Dokument zerlegt die komplette Grafik des Spiels bis auf Formeln, Zahlen und Farbwerte. Es ist so geschrieben, dass man den Look in einem **neuen Projekt** Schritt für Schritt exakt nachbauen kann. Die drei Shader stehen am Ende vollständig im Anhang.
 
 Bezugsdateien im Repo: `crates/art/src/*` (Kunst aus Code), `src/gfx/mod.rs` + `src/gfx/render.rs` (Renderer), `src/gfx/shaders/*.wgsl` (Shader), `src/game/env.rs` (Stimmungen), `src/world/view.rs` (Welt zeichnen), `src/game/draw.rs` (Figuren, Nebel, Licht).

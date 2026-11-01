@@ -1,7 +1,7 @@
 //! Effekte in Weltpixeln: Partikel (Blut, Funken, Glut, Seelenlicht, Schnee, Regen, Asche),
 //! Hiebbögen, Kettenblitze, Schadenszahlen, Telegraphen für Angriffe, Druckringe.
 
-use crate::gfx::{modes, Frame, LightDef};
+use crate::gfx::{modes, Frame};
 use std::cell::RefCell;
 use sw_art::noise::Rng;
 
@@ -95,22 +95,6 @@ pub struct BurstOpt {
     pub z: Option<f32>,
 }
 
-pub enum MarkKind {
-    Circle,
-    Cone,
-    Line,
-}
-pub struct Mark {
-    pub kind: MarkKind,
-    pub x: f32,
-    pub y: f32,
-    pub r: f32,
-    pub ang: f32,
-    pub w: f32,
-    pub t: f32,
-    pub dur: f32,
-    pub col: Col,
-}
 struct Slash {
     x: f32,
     y: f32,
@@ -118,12 +102,6 @@ struct Slash {
     r: f32,
     col: Col,
     width: f32,
-    t: f32,
-    dur: f32,
-}
-struct Bolt {
-    segs: Vec<[f32; 4]>,
-    col: Col,
     t: f32,
     dur: f32,
 }
@@ -141,23 +119,11 @@ struct Ring {
 pub struct Fx {
     pub parts: Vec<P>,
     slashes: Vec<Slash>,
-    bolts: Vec<Bolt>,
-    pub marks: Vec<Mark>,
     rings: Vec<Ring>,
-    /// Fußspuren: x, y, Rest, Farbe (Sand, Schnee, Asche, Schlamm)
-    pub prints: Vec<(f32, f32, f32, [u8; 4])>,
     pub t: f32,
 }
 
 impl Fx {
-    pub fn clear(&mut self) {
-        self.parts.clear();
-        self.slashes.clear();
-        self.bolts.clear();
-        self.marks.clear();
-        self.rings.clear();
-        self.prints.clear();
-    }
     pub fn p(&mut self, p: P) {
         if self.parts.len() > 1400 {
             self.parts.remove(0);
@@ -208,28 +174,6 @@ impl Fx {
     pub fn slash(&mut self, x: f32, y: f32, ang: f32, r: f32, col: Col, width: f32) {
         self.slashes.push(Slash { x, y, ang, r, col, width, t: 0.0, dur: 0.15 });
     }
-    pub fn bolt(&mut self, pts: &[(f32, f32)], col: Col, dur: f32) {
-        let mut segs = vec![];
-        for i in 0..pts.len().saturating_sub(1) {
-            let (x0, y0) = pts[i];
-            let (x1, y1) = pts[i + 1];
-            let n = (((x1 - x0).hypot(y1 - y0)) / 18.0).round().max(3.0) as i32;
-            let (mut px, mut py) = (x0, y0);
-            for k in 1..=n {
-                let t = k as f32 / n as f32;
-                let j = if k < n { 1.0 } else { 0.0 };
-                let nx = x0 + (x1 - x0) * t + rr(-9.0, 9.0) * j;
-                let ny = y0 + (y1 - y0) * t + rr(-9.0, 9.0) * j;
-                segs.push([px, py, nx, ny]);
-                px = nx;
-                py = ny;
-            }
-        }
-        self.bolts.push(Bolt { segs, col, t: 0.0, dur });
-    }
-    pub fn mark(&mut self, kind: MarkKind, x: f32, y: f32, r: f32, ang: f32, w: f32, dur: f32, col: Option<Col>) {
-        self.marks.push(Mark { kind, x, y, r, ang, w, t: 0.0, dur, col: col.unwrap_or([0.9, 0.2, 0.18, 0.45]) });
-    }
     pub fn ring(&mut self, x: f32, y: f32, r0: f32, r1: f32, dur: f32, col: [f32; 3]) {
         self.rings.push(Ring { x, y, r0, r1, t: 0.0, dur, col });
     }
@@ -278,10 +222,6 @@ impl Fx {
 
     pub fn update(&mut self, dt: f32) {
         self.t += dt;
-        for p in self.prints.iter_mut() {
-            p.2 -= dt;
-        }
-        self.prints.retain(|p| p.2 > 0.0);
         let t = self.t;
         for p in self.parts.iter_mut() {
             p.life -= dt;
@@ -310,18 +250,10 @@ impl Fx {
         for s in self.slashes.iter_mut() {
             s.t += dt;
         }
-        for s in self.bolts.iter_mut() {
-            s.t += dt;
-        }
-        for s in self.marks.iter_mut() {
-            s.t += dt;
-        }
         for s in self.rings.iter_mut() {
             s.t += dt;
         }
         self.slashes.retain(|s| s.t < s.dur);
-        self.bolts.retain(|s| s.t < s.dur);
-        self.marks.retain(|s| s.t < s.dur);
         self.rings.retain(|s| s.t < s.dur);
     }
 
@@ -330,64 +262,6 @@ impl Fx {
     }
 
     /// Telegraphen auf den Boden (unter den Figuren).
-    pub fn draw_under(&self, f: &mut Frame) {
-        for &(x, y, rest, c) in &self.prints {
-            let a = (rest / 3.0).min(1.0) * c[3] as f32;
-            f.decals.push(Frame::quad_rect(x - 2.0, y - 1.0, 4.0, 2.5, [c[0], c[1], c[2], a as u8], modes::SOFT, 0));
-        }
-        for m in &self.marks {
-            let k = (m.t / m.dur.max(0.01)).min(1.0);
-            let pulse = 0.75 + 0.25 * (m.t * 18.0).sin();
-            let col = Self::c8(m.col, pulse);
-            let full = Self::c8([m.col[0], m.col[1], m.col[2], 0.7], 1.0);
-            match m.kind {
-                MarkKind::Circle => {
-                    let rx = m.r;
-                    let ry = m.r * 0.6;
-                    // Fläche als Streifen, Fortschrittsring
-                    let mut y = -ry;
-                    while y <= ry {
-                        let w = (1.0 - (y / ry).powi(2)).max(0.0).sqrt() * rx;
-                        let q = Frame::quad_rect(m.x - w, m.y + y, w * 2.0, 2.0, col, modes::SOLID, 0);
-                        f.decals.push(q);
-                        y += 4.0;
-                    }
-                    let rk = rx * k;
-                    let mut a = 0.0f32;
-                    while a < std::f32::consts::TAU {
-                        f.decals.push(Frame::quad_rect(m.x + a.cos() * rk - 1.0, m.y + a.sin() * rk * 0.6 - 1.0, 2.0, 2.0, full, modes::SOLID, 0));
-                        a += 0.06;
-                    }
-                }
-                MarkKind::Cone => {
-                    let mut d = 12.0;
-                    while d < m.r {
-                        let mut s = -m.w;
-                        while s <= m.w {
-                            let a = m.ang + s;
-                            let cc = if d < m.r * k { full } else { col };
-                            f.decals.push(Frame::quad_rect(m.x + a.cos() * d - 1.0, m.y + a.sin() * d * 0.7 - 1.0, 3.0, 2.0, cc, modes::SOLID, 0));
-                            s += 6.0 / d;
-                        }
-                        d += 5.0;
-                    }
-                }
-                MarkKind::Line => {
-                    let (ca, sa) = (m.ang.cos(), m.ang.sin());
-                    let mut d = 0.0;
-                    while d < m.r {
-                        let mut s = -m.w;
-                        while s <= m.w {
-                            let cc = if d < m.r * k { full } else { col };
-                            f.decals.push(Frame::quad_rect(m.x + ca * d - sa * s - 1.0, m.y + sa * d * 0.85 + ca * s - 1.0, 3.0, 3.0, cc, modes::SOLID, 0));
-                            s += 4.0;
-                        }
-                        d += 4.0;
-                    }
-                }
-            }
-        }
-    }
 
     pub fn draw(&self, f: &mut Frame) {
         for p in &self.parts {
@@ -427,17 +301,6 @@ impl Fx {
                 f.over(Frame::quad_rect(x - w, y - w * 0.5, w * 2.0, w, col, modes::SOLID, 0), true);
             }
         }
-        for b in &self.bolts {
-            let fade = 1.0 - b.t / b.dur;
-            let col = Self::c8([b.col[0] * 2.0, b.col[1] * 2.0, b.col[2] * 2.0, 1.0], fade);
-            for s in &b.segs {
-                let n = ((s[2] - s[0]).hypot(s[3] - s[1])).round().max(1.0) as i32;
-                for i in 0..=n {
-                    let t = i as f32 / n as f32;
-                    f.over(Frame::quad_rect(s[0] + (s[2] - s[0]) * t - 1.0, s[1] + (s[3] - s[1]) * t - 1.0, 2.0, 2.0, col, modes::SOLID, 0), true);
-                }
-            }
-        }
         for g in &self.rings {
             let k = g.t / g.dur;
             let r = g.r0 + (g.r1 - g.r0) * k;
@@ -446,14 +309,6 @@ impl Fx {
             for i in 0..n {
                 let a = i as f32 / n as f32 * std::f32::consts::TAU;
                 f.over(Frame::quad_rect(g.x + a.cos() * r - 1.0, g.y + a.sin() * r * 0.6 - 1.0, 2.0, 2.0, col, modes::SOLID, 0), true);
-            }
-        }
-    }
-    pub fn lights(&self, f: &mut Frame) {
-        for b in &self.bolts {
-            for s in b.segs.iter().step_by(4) {
-                let k = 1.0 - b.t / b.dur;
-                f.light(LightDef { x: s[0], y: s[1] + 40.0, z: 40.0, r: 140.0, col: [0.9 * k * 2.0, 1.5 * k * 2.0, 1.4 * k * 2.0], flicker: 0.0 });
             }
         }
     }

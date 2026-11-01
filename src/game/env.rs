@@ -1,5 +1,5 @@
-//! Lichtstimmung je Zone (Dark Fantasy): Umgebungslicht, Sonne/Mond, Nebel, Wasser, Farbkorrektur.
-//! Die Albedo bleibt farbig wie in den Beispielbildern; die Stimmung kommt aus dem Licht.
+//! Lichtstimmung von Eclipse Ashes (Dark Fantasy): Umgebungslicht, Glutsonne, Aschedunst,
+//! Farbkorrektur. Die Albedo bleibt farbig; die Stimmung kommt aus dem Licht.
 
 use crate::gfx::{lin, Globals};
 
@@ -21,7 +21,6 @@ pub struct Env {
     pub water_a: [f32; 3],
     pub water_b: [f32; 3],
     pub water_c: [f32; 3],
-    pub light_k: f32,
     pub abyss: f32,
     /// Lichtstrahlen (HD-2D), skaliert mit der Sonne
     pub rays: f32,
@@ -36,363 +35,27 @@ fn n3(v: [f32; 3]) -> [f32; 3] {
     [v[0] / m, v[1] / m, v[2] / m]
 }
 
-pub fn env(zone: &str, sailing_open_sea: bool) -> Env {
-    let base = Env {
-        ambient: l(0x8A94B8, 0.55),
-        sky: 0.6,
+/// Aschenene Klippen: roter Dunst, Glut, kaum Sonne (Werte aus der alten Aschebucht)
+pub fn ash() -> Env {
+    Env {
+        ambient: l(0x948A94, 0.9),
+        sky: 0.4,
         sun_dir: n3([-0.55, -0.2, 0.8]),
-        sun: l(0xF2D2A4, 0.75),
-        shadow: 0.55,
-        fog: l(0x4A6170, 1.0),
-        fog_k: 0.06,
-        lift: [0.012, 0.016, 0.03],
-        gain: [1.0, 1.0, 1.0],
+        sun: l(0xFF9A7A, 0.5),
+        shadow: 0.35,
+        fog: l(0x4E3E40, 1.0),
+        fog_k: 0.05,
+        lift: [0.012, 0.008, 0.01],
+        gain: [1.0, 0.98, 0.97],
         contrast: 1.06,
-        sat: 1.0,
+        sat: 0.72,
         bloom: 0.55,
         vignette: 0.75,
-        water_a: l(0x4EC4D0, 1.0),
-        water_b: l(0x1E6E9E, 1.0),
-        water_c: l(0xE8FAFA, 1.0),
-        light_k: 1.0,
+        water_a: l(0x6A3A50, 1.0),
+        water_b: l(0x2A1426, 1.0),
+        water_c: l(0xE8A0A8, 1.0),
         abyss: 1.0,
-        rays: 0.5,
-    };
-    if sailing_open_sea {
-        return Env {
-            ambient: l(0x7898C0, 0.75),
-            sun: l(0xC8D8F0, 0.7),
-            sun_dir: n3([0.35, -0.45, 0.6]),
-            fog: l(0x3A5468, 1.0),
-            fog_k: 0.12,
-            water_a: l(0x3AA4BC, 1.0),
-            water_b: l(0x124A70, 1.0),
-            water_c: l(0xD8F0F6, 1.0),
-            rays: 0.3,
-            ..base
-        };
-    }
-    match zone {
-        // Galgenstrand: Piratenfriedhof bei Mondlicht, dichter grüngrauer Nebel, entsättigt
-        "kueste" => Env {
-            ambient: l(0x7A88A8, 0.76),
-            sky: 0.45,
-            sun: l(0xB8C8E0, 0.66),
-            sun_dir: n3([0.4, -0.35, 0.7]),
-            shadow: 0.62,
-            fog: l(0x4E5C58, 1.0),
-            fog_k: 0.12,
-            lift: [0.02, 0.026, 0.03],
-            gain: [0.96, 1.0, 1.02],
-            contrast: 1.1,
-            sat: 0.7,
-            bloom: 0.6,
-            water_a: l(0x3A6E74, 1.0),
-            water_b: l(0x16384A, 1.0),
-            water_c: l(0xB8CCCC, 1.0),
-            rays: 0.35,
-            light_k: 1.2,
-            ..base
-        },
-        // Glutwacht: Aschedämmerung wie am Feuerbandschrein, nur Glut und Laternen spenden Wärme
-        "hain" => Env {
-            rays: 0.7,
-            ambient: l(0x7A78A0, 0.56),
-            sky: 0.45,
-            sun: l(0xFFA070, 0.62),
-            sun_dir: n3([-0.7, -0.15, 0.5]),
-            shadow: 0.5,
-            fog: l(0x3E3C4A, 1.0),
-            fog_k: 0.08,
-            lift: [0.03, 0.015, 0.02],
-            gain: [1.04, 0.98, 0.94],
-            sat: 0.9,
-            bloom: 0.7,
-            water_a: l(0x2E7A86, 1.0),
-            water_b: l(0x1C5268, 1.0),
-            water_c: l(0xC8E8E0, 1.0),
-            light_k: 1.25,
-            ..base
-        },
-        // Aschebucht: roter Nebel, Glut, kaum Sonne
-        "asche" => Env {
-            rays: 0.6,
-            ambient: l(0x8C7480, 0.5),
-            sky: 0.4,
-            sun: l(0xFF8A6A, 0.3),
-            shadow: 0.35,
-            fog: l(0x84343E, 1.0),
-            fog_k: 0.06,
-            lift: [0.03, 0.005, 0.01],
-            gain: [1.04, 0.97, 0.96],
-            sat: 0.8,
-            bloom: 0.55,
-            water_a: l(0x6A3A50, 1.0),
-            water_b: l(0x2A1426, 1.0),
-            water_c: l(0xE8A0A8, 1.0),
-            light_k: 1.2,
-            ..base
-        },
-        // Frostgrotte: kalte Nacht, Mondlicht
-        "frost" => Env {
-            rays: 0.55,
-            ambient: l(0x5A78B8, 0.38),
-            sun: l(0xA8C8FF, 0.55),
-            sun_dir: n3([0.4, -0.3, 0.8]),
-            fog: l(0x6A88A8, 1.0),
-            fog_k: 0.05,
-            lift: [0.01, 0.02, 0.05],
-            gain: [0.95, 1.0, 1.06],
-            sat: 0.9,
-            water_a: l(0x6EA8C0, 1.0),
-            water_b: l(0x24506E, 1.0),
-            water_c: l(0xF0FAFF, 1.0),
-            ..base
-        },
-        // Rabenwacht: Sturm, grau, Regen
-        "raben" => Env {
-            rays: 0.3,
-            ambient: l(0x6E7A90, 0.42),
-            sun: l(0xC8D0E0, 0.3),
-            shadow: 0.25,
-            fog: l(0x50606E, 1.0),
-            fog_k: 0.16,
-            sat: 0.82,
-            contrast: 1.1,
-            water_a: l(0x3E8E9E, 1.0),
-            water_b: l(0x18486A, 1.0),
-            water_c: l(0xC8E4EA, 1.0),
-            light_k: 1.15,
-            ..base
-        },
-        // Fluchmangroven: fauliges Grün, Dunkelheit unter den Kronen
-        "mangroven" => Env {
-            rays: 0.75,
-            ambient: l(0x5A8068, 0.4),
-            sky: 0.35,
-            sun: l(0xB8D890, 0.32),
-            shadow: 0.4,
-            fog: l(0x4E6250, 1.0),
-            fog_k: 0.12,
-            lift: [0.01, 0.03, 0.015],
-            gain: [0.97, 1.03, 0.95],
-            water_a: l(0x2E5A4E, 1.0),
-            water_b: l(0x12302E, 1.0),
-            water_c: l(0x9AC0B0, 1.0),
-            light_k: 1.2,
-            ..base
-        },
-        // Ende der Welt: Schwarz und Blutrot
-        "ende" => Env {
-            rays: 0.5,
-            ambient: l(0x8A6474, 0.62),
-            sky: 0.45,
-            sun: l(0xFF7A5A, 0.42),
-            shadow: 0.35,
-            fog: l(0x5A2232, 1.0),
-            fog_k: 0.1,
-            lift: [0.05, 0.01, 0.025],
-            gain: [1.05, 0.93, 0.96],
-            contrast: 1.1,
-            bloom: 0.8,
-            water_a: l(0x7A4A5A, 1.0),
-            water_b: l(0x2E1624, 1.0),
-            water_c: l(0xE08A90, 1.0),
-            light_k: 1.25,
-            abyss: 1.4,
-            ..base
-        },
-        // Ladenräume: warmes Kerzen- und Fackellicht, kein Nebel
-        "innen" => Env {
-            rays: 0.0,
-            ambient: l(0x9A8A78, 0.6),
-            sky: 0.2,
-            sun: l(0x6A4A30, 0.1),
-            shadow: 0.2,
-            fog: l(0x1A1210, 1.0),
-            fog_k: 0.0,
-            lift: [0.02, 0.01, 0.0],
-            gain: [1.02, 0.99, 0.94],
-            bloom: 0.6,
-            vignette: 1.1,
-            light_k: 1.2,
-            ..base
-        },
-        // Ende der Welt vor dem Kampf: spiegelglatte Stille, kaltes Mondsilber
-        "stille" => Env {
-            rays: 0.3,
-            ambient: l(0x7A86A8, 0.5),
-            sky: 0.55,
-            sun: l(0xC8D4F0, 0.5),
-            sun_dir: n3([0.3, -0.35, 0.85]),
-            shadow: 0.45,
-            fog: l(0x2A3448, 1.0),
-            fog_k: 0.07,
-            lift: [0.01, 0.015, 0.035],
-            gain: [0.96, 1.0, 1.06],
-            sat: 0.75,
-            bloom: 0.6,
-            water_a: l(0x3A4E66, 1.0),
-            water_b: l(0x0C1420, 1.0),
-            water_c: l(0xC8D8F0, 1.0),
-            light_k: 1.3,
-            ..base
-        },
-        // Phase 2: Umkehr – violetter Himmel, die Sonne liegt tief unter dem Schiff
-        // Phase 3: im Schlund – Dunkel, nur Laternen und glühendes Fleisch
-        // Phase 4: Blau gegen Blau
-        // Seeschlacht gegen den Holländer: Gewitternacht, grünes Geisterlicht
-        "hollaender" => Env {
-            rays: 0.5,
-            ambient: l(0x8A9AB0, 0.82),
-            sky: 0.55,
-            sun: l(0xB8D0E0, 0.7),
-            sun_dir: n3([0.35, -0.5, 0.7]),
-            shadow: 0.5,
-            fog: l(0x24363A, 1.0),
-            fog_k: 0.07,
-            lift: [0.01, 0.025, 0.03],
-            gain: [0.96, 1.02, 1.0],
-            contrast: 1.12,
-            sat: 0.8,
-            bloom: 0.75,
-            water_a: l(0x2E5A5E, 1.0),
-            water_b: l(0x0A1C22, 1.0),
-            water_c: l(0xB8E0D8, 1.0),
-            light_k: 1.3,
-            ..base
-        },
-        // Meeresgrund: trockengefallen, grünes Zwielicht, Nebel aus Gischt und Salz
-        "meeresgrund" => Env {
-            rays: 0.7,
-            ambient: l(0x8AA8A0, 0.86),
-            sky: 0.5,
-            sun: l(0xB8D8C8, 0.66),
-            sun_dir: n3([-0.3, -0.4, 0.75]),
-            shadow: 0.5,
-            fog: l(0x2A4440, 1.0),
-            fog_k: 0.12,
-            lift: [0.01, 0.03, 0.025],
-            gain: [0.94, 1.02, 1.0],
-            contrast: 1.1,
-            sat: 0.7,
-            bloom: 0.75,
-            water_a: l(0x2A5A54, 1.0),
-            water_b: l(0x0A1A18, 1.0),
-            water_c: l(0xA8D8C8, 1.0),
-            light_k: 1.4,
-            ..base
-        },
-        // Phase 5: die Unterseite – fast weiß, ausgeblichen, still
-        _ => base,
-    }
-}
-
-/// Elementare Seegebiete der Seebosse (werden mit der offenen See gemischt).
-pub fn sea_env(el: &str) -> Env {
-    let base = env("", true);
-    match el {
-        // Glutsee: brennendes Wasser, Rauch, Glut am Himmel
-        "fire" => Env {
-            rays: 0.7,
-            ambient: l(0x8A7470, 0.7),
-            sky: 0.45,
-            sun: l(0xFF9A6A, 0.5),
-            sun_dir: n3([-0.5, -0.3, 0.6]),
-            shadow: 0.4,
-            fog: l(0x4A2A2A, 1.0),
-            fog_k: 0.1,
-            lift: [0.03, 0.01, 0.0],
-            gain: [1.04, 0.97, 0.94],
-            sat: 0.9,
-            bloom: 0.6,
-            water_a: l(0xA8705A, 1.0),
-            water_b: l(0x5A2C2A, 1.0),
-            water_c: l(0xE8A070, 1.0),
-            light_k: 1.0,
-            ..base
-        },
-        // Eismeer: Polarlicht-Kälte, heller Nebel
-        "ice" => Env {
-            rays: 0.6,
-            ambient: l(0x7A9AC8, 0.66),
-            sun: l(0xC8E0FF, 0.7),
-            sun_dir: n3([0.45, -0.35, 0.75]),
-            fog: l(0x9AB8D0, 1.0),
-            fog_k: 0.14,
-            lift: [0.01, 0.025, 0.05],
-            gain: [0.94, 1.0, 1.08],
-            sat: 0.85,
-            water_a: l(0x7EC8D8, 1.0),
-            water_b: l(0x1E5A7A, 1.0),
-            water_c: l(0xFFFFFF, 1.0),
-            ..base
-        },
-        // Sturmsee: schwarze Wolken, Regen, Blitze
-        "wind" => Env {
-            rays: 0.25,
-            ambient: l(0x6E7A94, 0.62),
-            sky: 0.35,
-            sun: l(0xB0C0D8, 0.4),
-            shadow: 0.2,
-            fog: l(0x4A5866, 1.0),
-            fog_k: 0.2,
-            contrast: 1.12,
-            sat: 0.75,
-            water_a: l(0x3A6E7E, 1.0),
-            water_b: l(0x10283C, 1.0),
-            water_c: l(0xB8D0D8, 1.0),
-            light_k: 1.2,
-            ..base
-        },
-        // Tiefengrund: grünes Leuchten aus der Tiefe, schwerer Nebel
-        _ => Env {
-            rays: 0.5,
-            ambient: l(0x5A8474, 0.62),
-            sky: 0.35,
-            sun: l(0x98C878, 0.42),
-            shadow: 0.35,
-            fog: l(0x2E5040, 1.0),
-            fog_k: 0.2,
-            lift: [0.0, 0.03, 0.02],
-            gain: [0.94, 1.04, 0.98],
-            water_a: l(0x1E5A44, 1.0),
-            water_b: l(0x061C18, 1.0),
-            water_c: l(0x7AE0A0, 1.0),
-            light_k: 1.3,
-            abyss: 1.3,
-            ..base
-        },
-    }
-}
-
-fn lerp3(a: [f32; 3], b: [f32; 3], t: f32) -> [f32; 3] {
-    [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]
-}
-fn lerp(a: f32, b: f32, t: f32) -> f32 {
-    a + (b - a) * t
-}
-pub fn mix(a: &Env, b: &Env, t: f32) -> Env {
-    Env {
-        ambient: lerp3(a.ambient, b.ambient, t),
-        sky: lerp(a.sky, b.sky, t),
-        sun_dir: n3(lerp3(a.sun_dir, b.sun_dir, t)),
-        sun: lerp3(a.sun, b.sun, t),
-        shadow: lerp(a.shadow, b.shadow, t),
-        fog: lerp3(a.fog, b.fog, t),
-        fog_k: lerp(a.fog_k, b.fog_k, t),
-        lift: lerp3(a.lift, b.lift, t),
-        gain: lerp3(a.gain, b.gain, t),
-        contrast: lerp(a.contrast, b.contrast, t),
-        sat: lerp(a.sat, b.sat, t),
-        bloom: lerp(a.bloom, b.bloom, t),
-        vignette: lerp(a.vignette, b.vignette, t),
-        water_a: lerp3(a.water_a, b.water_a, t),
-        water_b: lerp3(a.water_b, b.water_b, t),
-        water_c: lerp3(a.water_c, b.water_c, t),
-        light_k: lerp(a.light_k, b.light_k, t),
-        abyss: lerp(a.abyss, b.abyss, t),
-        rays: lerp(a.rays, b.rays, t),
+        rays: 0.6,
     }
 }
 

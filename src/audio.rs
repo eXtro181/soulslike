@@ -185,10 +185,6 @@ impl Audio {
             self.apply_mood();
         }
     }
-    pub fn play_song(&mut self, name: &'static str, secs: f32) {
-        self.over = Some((name, secs));
-        self.apply_mood();
-    }
 
     fn apply_mood(&mut self) {
         let t = self.song_for();

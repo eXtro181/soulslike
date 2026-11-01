@@ -10,27 +10,21 @@ pub enum Act {
     Down,
     Left,
     Right,
+    Jump,
     Attack,
     Heavy,
-    Item,
     Roll,
-    Parry,
-    Lock,
+    /// halten = Schild, kurz vor dem Treffer gedrückt = Parade
+    Block,
     Drink,
     Interact,
-    Shanty,
+    /// Aschenkunst der Waffe
+    Art,
     Menu,
-    Map,
-    Legend,
-    Spell,
-    Swap,
     Confirm,
-    Names,
-    Belt1,
-    Belt2,
-    /// Fortschritt (Bosse, Crew)
-    Status,
 }
+
+const ALL: [Act; 14] = [Act::Up, Act::Down, Act::Left, Act::Right, Act::Jump, Act::Attack, Act::Heavy, Act::Roll, Act::Block, Act::Drink, Act::Interact, Act::Art, Act::Menu, Act::Confirm];
 
 fn keys(a: Act) -> &'static [K] {
     use Act::*;
@@ -39,25 +33,16 @@ fn keys(a: Act) -> &'static [K] {
         Down => &[K::KeyS, K::ArrowDown],
         Left => &[K::KeyA, K::ArrowLeft],
         Right => &[K::KeyD, K::ArrowRight],
+        Jump => &[K::Space],
         Attack => &[K::KeyJ],
         Heavy => &[K::KeyL],
-        Item => &[K::KeyK],
-        Roll => &[K::Space],
-        Parry => &[K::KeyQ],
-        Lock => &[K::Tab],
+        Roll => &[K::ShiftLeft, K::ShiftRight, K::KeyK],
+        Block => &[K::KeyQ],
         Drink => &[K::KeyR],
         Interact => &[K::KeyE],
-        Shanty => &[K::KeyF],
+        Art => &[K::KeyC],
         Menu => &[K::Escape],
-        Map => &[K::KeyM],
-        Legend => &[K::KeyH],
-        Status => &[K::KeyI],
-        Spell => &[K::KeyC],
-        Swap => &[K::KeyX],
         Confirm => &[K::Enter, K::NumpadEnter],
-        Names => &[K::AltLeft, K::AltRight],
-        Belt1 => &[K::Digit1],
-        Belt2 => &[K::Digit2],
     }
 }
 
@@ -73,13 +58,9 @@ pub struct Input {
     pub any: bool,
     /// Maus in UI-Pixeln
     pub mouse: Vec2,
-    pub mouse_world: Vec2,
     pub mouse_moved: bool,
     pub click: bool,
     pub using_touch: bool,
-    /// getippte Zeichen (für Textfelder ohne DOM)
-    pub typed: String,
-    pub backspace: bool,
 }
 
 impl Input {
@@ -89,33 +70,7 @@ impl Input {
     pub fn feed(&mut self, kb: &ButtonInput<KeyCode>) {
         self.held.clear();
         self.hits.clear();
-        let all = [
-            Act::Up,
-            Act::Down,
-            Act::Left,
-            Act::Right,
-            Act::Attack,
-            Act::Heavy,
-            Act::Item,
-            Act::Roll,
-            Act::Parry,
-            Act::Lock,
-            Act::Drink,
-            Act::Interact,
-            Act::Shanty,
-            Act::Menu,
-            Act::Map,
-            Act::Legend,
-            Act::Spell,
-            Act::Swap,
-            Act::Confirm,
-            Act::Names,
-            Act::Belt1,
-            Act::Belt2,
-            Act::Status,
-        ];
-        let shift = kb.pressed(K::ShiftLeft) || kb.pressed(K::ShiftRight);
-        for a in all {
+        for a in ALL {
             let ks = keys(a);
             if ks.iter().any(|k| kb.pressed(*k)) {
                 self.held.insert(a);
@@ -125,10 +80,6 @@ impl Input {
                 self.any = true;
                 self.using_touch = false;
             }
-        }
-        if shift && self.hits.contains(&Act::Attack) {
-            self.hits.remove(&Act::Attack);
-            self.hits.insert(Act::Heavy);
         }
         if kb.get_just_pressed().next().is_some() {
             self.any = true;
@@ -169,7 +120,5 @@ impl Input {
         self.v_hits.clear();
         self.any = false;
         self.click = false;
-        self.typed.clear();
-        self.backspace = false;
     }
 }
