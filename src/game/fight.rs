@@ -343,7 +343,7 @@ impl Game {
                 // Leiter greifen
                 let tx = (p.b.x / TS).floor() as i32;
                 let feet = ((p.b.y - 2.0) / TS).floor() as i32;
-                let below = (p.b.y / TS).floor() as i32 + 0;
+                let below = (p.b.y / TS).floor() as i32;
                 if (up && self.lv.ladder(tx, feet)) || (down && p.b.ground && self.lv.ladder(tx, below)) {
                     p.state = PS::Climb;
                     p.b.x = tx as f32 * TS + TS * 0.5;
@@ -365,7 +365,7 @@ impl Game {
                 if p.jump_buf > 0.0 && p.coyote > 0.0 {
                     p.jump_buf = 0.0;
                     p.coyote = 0.0;
-                    if down && p.b.ground {
+                    if down && p.b.ground && self.lv.oneway(tx, (p.b.y / TS).floor() as i32) {
                         p.drop_t = 0.25;
                     } else {
                         p.b.vy = -440.0;
@@ -469,9 +469,14 @@ impl Game {
                 if t < sw.wind * 0.6 && inp_x.abs() > 0.3 {
                     self.p.face = inp_x.signum();
                 }
+                if !self.p.b.ground {
+                    speed_x = self.p.b.vx;
+                }
                 if t >= sw.wind && !self.p.hit_done {
                     self.p.hit_done = true;
-                    speed_x = self.p.face * 140.0;
+                    if self.p.b.ground {
+                        speed_x = self.p.face * 140.0;
+                    }
                     let face = self.p.face;
                     let dmg = self.base_dmg() * sw.dmg * (1.0 + self.p.combo as f32 * 0.15);
                     self.strike(face, sw.reach, 0.0, dmg, dmg * sw.post);
@@ -546,8 +551,8 @@ impl Game {
                 }
             }
             PS::Drink => {
-                if self.p.t > 0.5 && self.p.heal_left <= 0.0 && self.p.t - dt <= 0.5 {
-                    self.p.heal_left = self.max_hp() * 0.45;
+                if self.p.t > 0.5 && self.p.t - dt <= 0.5 {
+                    self.p.heal_left += self.max_hp() * 0.45;
                     let (x, y) = (self.p.b.x, self.p.b.y);
                     self.fx.rise("heal", x, y, 16, 28.0, Some(c::HEAL));
                     self.sfx_q.push("heal");
@@ -592,9 +597,7 @@ impl Game {
             _ => {}
         }
         let p = &mut self.p;
-        if p.state != PS::Hurt {
-            p.b.vx = speed_x;
-        }
+        p.b.vx = speed_x;
         if gravity {
             p.b.vy = (p.b.vy + GRAV * dt).min(900.0);
         }
@@ -735,6 +738,11 @@ impl Game {
                     f.t = 0.0;
                     let (x, y) = (f.b.x, f.b.y);
                     self.gain_ash(d.ash);
+                    if self.foes[i].kind == Kind::Gunner {
+                        self.save.miniboss = true;
+                        self.banner("ZERSCHMETTERT", "Der Gallions-Schütze schweigt", 3.0);
+                        self.persist();
+                    }
                     self.fx.burst("ember", x, y, 24, BurstOpt { speed: Some(90.0), up: Some(30.0), g: Some(-30.0), life: Some(1.4), ..Default::default() });
                     self.sfx_q.push("bones");
                 }
@@ -987,7 +995,7 @@ impl Game {
                         self.shots.push((sx, sy, (px - sx) / t, (py - 20.0 - sy) / t - GRAV * 0.25 * t, 2.0));
                         self.sfx_q.push("cannon");
                         self.shake = self.shake.max(3.0);
-                        self.fx.burst("smoke", sx, fy, 6, BurstOpt { speed: Some(50.0), up: Some(44.0), ..Default::default() });
+                        self.fx.burst("smoke", sx, sy, 6, BurstOpt { speed: Some(50.0), ..Default::default() });
                     } else if kind == Kind::Grabber {
                         self.shake = self.shake.max(5.0);
                         self.fx.ring(fx0, fy, 10.0, d.reach, 0.3, [0.7, 0.6, 0.5]);
@@ -1268,6 +1276,7 @@ impl Game {
         self.sfx_q.push("death");
         self.fx.burst("ember", x, y, 60, BurstOpt { speed: Some(200.0), up: Some(80.0), g: Some(-20.0), life: Some(2.0), ..Default::default() });
         self.banner("ASCHE VERWEHT", "Kapitän Barnaby ist gefallen · Der Pfad der Verdörrten Pilger öffnet sich", 6.0);
+        self.end_t = Some(0.0);
         self.persist();
     }
 

@@ -27,9 +27,22 @@ impl Game {
     /// Menüs bedienen und die ganze Oberfläche zeichnen.
     pub fn ui(&mut self, art: &Art, f: &mut Frame) {
         let (uw, uh) = f.ui_size();
+        if self.mode != self.ui_mode {
+            self.ui_mode = self.mode;
+            self.ui_frames = 0;
+        } else {
+            self.ui_frames += 1;
+        }
         match self.mode {
             Mode::Title => self.title(art, f, uw, uh),
-            Mode::Play => self.hud(art, f, uw, uh),
+            Mode::Play => {
+                self.hud(art, f, uw, uh);
+                // Pause hier statt in update(): sonst schlösse dieselbe Taste sie im selben Bild wieder
+                if self.input.pressed(Act::Menu) && self.death_t.is_none() {
+                    self.mode = Mode::Pause;
+                    self.sel = 0;
+                }
+            }
             Mode::Pause => {
                 self.hud(art, f, uw, uh);
                 f.ui_rect(0.0, 0.0, uw, uh, [6, 6, 8, 150]);
@@ -40,7 +53,7 @@ impl Game {
                     Some(_) => {
                         *self = Game::new();
                     }
-                    None if self.input.pressed(Act::Menu) => self.mode = Mode::Play,
+                    None if self.input.pressed(Act::Menu) && self.ui_frames > 0 => self.mode = Mode::Play,
                     None => {}
                 }
             }
@@ -53,7 +66,7 @@ impl Game {
                     text::draw(f, art, v, uw * 0.5 + 8.0, y, col::BONE, Al::L, 1.0, true);
                 }
                 text::draw(f, art, "Esc / Enter: zurück", uw * 0.5, uh - 24.0, col::MIST, Al::C, 1.0, true);
-                if self.input.pressed(Act::Menu) || self.input.pressed(Act::Confirm) || self.input.pressed(Act::Attack) || self.input.click {
+                if self.ui_frames > 0 && (self.input.pressed(Act::Menu) || self.input.pressed(Act::Confirm) || self.input.pressed(Act::Attack) || self.input.click) {
                     self.mode = if self.mood == "title" { Mode::Title } else { Mode::Pause };
                     self.sel = 0;
                 }
@@ -62,6 +75,7 @@ impl Game {
                 self.hud(art, f, uw, uh);
                 self.shrine_menu(art, f, uw, uh);
             }
+            Mode::End => self.end_screen(art, f, uw, uh),
         }
     }
 
@@ -86,7 +100,7 @@ impl Game {
             if hover && (self.input.mouse_moved || self.input.click) {
                 self.sel = i;
             }
-            if hover && self.input.click {
+            if hover && self.input.click && self.ui_frames > 0 {
                 pick = Some(i);
             }
             let on = i == self.sel;
@@ -101,7 +115,7 @@ impl Game {
                 text::draw(f, art, s, x, y + n as f32 * 18.0 + 8.0, col::MIST, Al::C, 1.0, true);
             }
         }
-        if self.input.pressed(Act::Confirm) || self.input.pressed(Act::Attack) || self.input.pressed(Act::Interact) {
+        if self.ui_frames > 0 && (self.input.pressed(Act::Confirm) || self.input.pressed(Act::Attack) || self.input.pressed(Act::Interact)) {
             pick = Some(self.sel);
         }
         if pick.is_some() {
@@ -182,7 +196,30 @@ impl Game {
                 self.save.aff = (self.save.aff + 1) % AFFS.len();
                 self.persist();
             }
-            None if self.input.pressed(Act::Menu) => self.mode = Mode::Play,
+            None if self.input.pressed(Act::Menu) && self.ui_frames > 0 => self.mode = Mode::Play,
+            None => {}
+        }
+    }
+
+    /// Abschluss der Zone: Statistik, weiterspielen oder zum Titel
+    fn end_screen(&mut self, art: &Art, f: &mut Frame, uw: f32, uh: f32) {
+        f.ui_rect(0.0, 0.0, uw, uh, [6, 4, 4, 210]);
+        text::draw(f, art, "ENDE DES ERSTEN KAPITELS", uw * 0.5, uh * 0.18, col::GOLD, Al::C, 2.0, true);
+        text::draw(f, art, "Die Aschenen Klippen von Calamita sind bezwungen.", uw * 0.5, uh * 0.18 + 24.0, col::BONE, Al::C, 1.0, true);
+        let s = &self.save;
+        let secs = s.time as i64;
+        let lines = [
+            format!("Spielzeit {}:{:02}:{:02}", secs / 3600, secs / 60 % 60, secs % 60),
+            format!("Stufe {} · Tode {} · Asche {}", s.level(), s.deaths, s.ash),
+            format!("Kriegsaschen {} von {}", s.arts.len(), ARTS.len()),
+            "Der Pfad der Verdörrten Pilger (Zone 02) folgt.".to_string(),
+        ];
+        for (i, l) in lines.iter().enumerate() {
+            text::draw(f, art, l, uw * 0.5, uh * 0.34 + i as f32 * 14.0, if i == 3 { col::MIST } else { col::BONE_DIM }, Al::C, 1.0, true);
+        }
+        match self.menu(art, f, &["Weiterspielen", "Zum Titel"], uw * 0.5, uh * 0.66, None) {
+            Some(0) => self.mode = Mode::Play,
+            Some(_) => *self = super::Game::new(),
             None => {}
         }
     }
@@ -229,7 +266,7 @@ impl Game {
             Self::bar(f, uw * 0.5 - w * 0.5, y, w, 5.0, *hp, col::BLOOD_L);
             Self::bar(f, uw * 0.5 - w * 0.25, y + 8.0, w * 0.5, 2.0, *post, if *broken { col::BONE } else { col::GOLD });
         }
-        if let Some(s) = self.interaction() {
+        if let Some(s) = self.interaction().filter(|_| self.mode == Mode::Play) {
             text::draw(f, art, s, uw * 0.5, uh - 92.0, col::BONE, Al::C, 1.0, true);
         }
         if let Some((s, _)) = &self.toast {

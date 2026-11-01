@@ -21,9 +21,9 @@ pub const MAP: [&str; 40] = [
     "####                ###########                    #",
     "####                ###########                    #",
     "####    =====       ###########    ====    ====    #",
-    "####                .....c.....D                   #",
-    "####                ...........D                   #",
-    "##L  W    t   G     ..t.....m.tD t          B    t #",
+    "##                  .....c.....D                   #",
+    "##                  ...........D                   #",
+    "##   W    t   G     ..t.....m.tD t          B    t #",
     "##L#####H###########################################",
     "##L#....H............###############################",
     "##L#....H............###############################",
@@ -112,7 +112,7 @@ impl Level {
         }
     }
     /// trägt von oben: Planke oder oberstes Leiterstück
-    fn oneway(&self, x: i32, y: i32) -> bool {
+    pub fn oneway(&self, x: i32, y: i32) -> bool {
         self.cell(x, y) == b'=' || (self.ladder(x, y) && !self.ladder(x, y - 1))
     }
     pub fn size(&self) -> (f32, f32) {
@@ -189,7 +189,7 @@ impl Level {
         }
         // verfinsterte Sonne als Pixelscheibe in der Kulisse (so verdeckt der Fels sie):
         // Glutkranz in zwei Stufen, davor die schwarze Scheibe
-        let (sx, sy) = (vx + vw * 0.55 - vx * 0.02, vy + vh * 0.2 - vy * 0.02);
+        let (sx, sy) = (vx + vw * 0.78 - vx * 0.02, vy + vh * 0.2 - vy * 0.02);
         let pulse = 1.0 + (t * 0.8).sin() * 0.04;
         for (r, c) in [(52.0 * pulse, [236u8, 120, 70]), (42.0, [255, 170, 110]), (34.0, [10, 8, 12])] {
             let mut y = -r;

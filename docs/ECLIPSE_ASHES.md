@@ -10,7 +10,7 @@
 | Grafik | 2D-HD-Pixelart, dynamisches Licht mit Normalmaps, mehrlagige Parallax-Kulisse, Aschepartikel |
 | Vorgänger | *Throne of the Drowned*: alle Piraten- und Seemechaniken entfernt. Schiffe sind trockene, versteinerte Wracks im Inland, die Meere sind zu Pech und Asche geworden. Das Meer lebt nur noch als Kulisse und Überlieferung. |
 
-## 1. Baustand (01.11.)
+## 1. Baustand (02.11.)
 
 | Bereich | Stand |
 |---|---|
@@ -18,6 +18,8 @@
 | Kampfsystem | **fertig**: Hiebe mit Frame-Daten, Kombos, Rolle, Schild/Parade, Haltung, Hinrichtung, Aschenkünste, Prägungen, Trank |
 | Schrein, Tod, Asche | **fertig**: Rasten (Gegner kehren zurück), Katha (Stufen), Corvus (Kunst/Prägung), Aschefleck beim Tod |
 | Spielstand | **fertig**: JSON in `localStorage` (`eclipse-ashes`), Fortsetzen im Titel |
+| Abschluss | **fertig**: nach Barnaby „Ende des ersten Kapitels“ mit Spielzeit, Stufe, Toden; weiterspielen oder zum Titel |
+| Tests | 13 Simulationstests (`src/game/tests.rs`, `cargo test --bin schwarzwasser`): ganzer Weg Start → Nebeltor, Leitern, Abkürzung, Parade und Hinrichtung, Miniboss, Bosssieg bis Abschluss, Tod und Aschefleck, Menüs |
 | Zonen 02–15, Bosse 02–15, Minibosse | **spezifiziert** (Abschnitt 5), noch nicht gebaut |
 | Kapitän Roderick, Stummer Wanderer | spezifiziert, noch nicht gebaut |
 

@@ -8,6 +8,8 @@ pub mod fx;
 mod hud;
 pub mod input;
 mod level;
+#[cfg(test)]
+mod tests;
 
 use crate::art::{anim_index, Art};
 use crate::gfx::{flags, Frame, LightDef, SprOpt};
@@ -40,10 +42,12 @@ pub struct Save {
     /// Aschefleck: x, y, Menge
     pub drop: Option<(f32, f32, i64)>,
     pub deaths: i32,
+    /// Spielzeit in Sekunden
+    pub time: f64,
 }
 impl Default for Save {
     fn default() -> Self {
-        Save { vit: 0, end: 0, str: 0, ash: 0, arts: vec!["wirbel".into()], art: 0, aff: 0, flasks: 3, shortcut: false, boss: false, miniboss: false, picked: String::new(), drop: None, deaths: 0 }
+        Save { vit: 0, end: 0, str: 0, ash: 0, arts: vec!["wirbel".into()], art: 0, aff: 0, flasks: 3, shortcut: false, boss: false, miniboss: false, picked: String::new(), drop: None, deaths: 0, time: 0.0 }
     }
 }
 impl Save {
@@ -76,13 +80,15 @@ fn store_set(v: &str) -> Result<(), String> {
     }
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Mode {
     Title,
     Play,
     Pause,
     Controls,
     Shrine,
+    /// Abschluss nach dem Sieg über den Zonenboss
+    End,
 }
 
 pub struct Game {
@@ -112,6 +118,12 @@ pub struct Game {
     pub toast: Option<(String, f32)>,
     pub death_t: Option<f32>,
     pub has_save: bool,
+    /// Zeit seit dem Bosssieg (bis zum Abschluss-Bildschirm)
+    pub end_t: Option<f32>,
+    /// Modus beim letzten Zeichnen der Oberfläche und wie viele Bilder er schon steht: ein Menü
+    /// nimmt erst ab dem zweiten Bild Bestätigungen an (sonst schließt das E vom Rasten es sofort)
+    pub ui_mode: Mode,
+    pub ui_frames: u32,
     env: env::Env,
 }
 
@@ -149,6 +161,9 @@ impl Game {
             toast: None,
             death_t: None,
             has_save: store_get().is_some(),
+            end_t: None,
+            ui_mode: Mode::Title,
+            ui_frames: 0,
             env: env::ash(),
         };
         g.reset_zone();
@@ -308,16 +323,21 @@ impl Game {
             }
         }
         match self.mode {
-            Mode::Title | Mode::Pause | Mode::Controls | Mode::Shrine => {
+            Mode::Title | Mode::Pause | Mode::Controls | Mode::Shrine | Mode::End => {
                 self.fx.update(dt);
                 return;
             }
             Mode::Play => {}
         }
-        if self.input.pressed(Act::Menu) {
-            self.mode = Mode::Pause;
-            self.sel = 0;
-            return;
+        self.save.time += dt as f64;
+        if let Some(t) = self.end_t.as_mut() {
+            *t += dt;
+            if *t > 7.0 {
+                self.end_t = None;
+                self.mode = Mode::End;
+                self.sel = 0;
+                return;
+            }
         }
         // Treffer-Stopp: wenige Bilder fast angehalten, damit Treffer Gewicht haben
         let dt = if self.hitstop > 0.0 {
@@ -347,7 +367,8 @@ impl Game {
             }
         }
         // Nebeltor: wer hindurchgeht, kämpft
-        if self.boss.state == BS::Dormant && self.p.b.x > self.gate_x + TS + 8.0 && self.death_t.is_none() {
+        // erst schließen, wenn der Spieler ganz durch ist (sonst steckt er im Tor fest)
+        if self.boss.state == BS::Dormant && self.p.b.x - self.p.b.w * 0.5 > self.gate_x + TS + 2.0 && self.death_t.is_none() {
             self.lv.gate_closed = true;
             self.boss.state = BS::Intro;
             self.boss.t = 0.0;
@@ -358,13 +379,7 @@ impl Game {
         if self.boss.state == BS::Dead && self.mood == "boss" {
             self.mood = "glut";
         }
-        let was_alive = self.foes.iter().any(|f| f.kind == Kind::Gunner && f.state != FS::Dead);
         self.update_foes(dt);
-        if was_alive && !self.foes.iter().any(|f| f.kind == Kind::Gunner && f.state != FS::Dead) {
-            self.save.miniboss = true;
-            self.banner("ZERSCHMETTERT", "Der Gallions-Schütze schweigt", 3.0);
-            self.persist();
-        }
         self.update_boss(dt);
         self.update_shots(dt);
         self.fx.ambient(dt, self.view_rect(), 5, false);
@@ -380,9 +395,9 @@ impl Game {
         let (lw, lh) = self.lv.size();
         let mut tx = self.p.b.x + self.p.face * 40.0;
         let ty = self.p.b.y - 60.0;
-        // im Bosskampf steht die Kamera über der Arena
+        // im Bosskampf hält die Kamera Arena und Spieler im Bild (auch auf schmalen Bildschirmen)
         if self.boss.active() {
-            tx = self.boss.home.0 - 60.0;
+            tx = self.p.b.x * 0.6 + (self.boss.home.0 - 60.0) * 0.4;
         }
         let k = (dt * 6.0).min(1.0);
         self.cam.0 += (tx - self.cam.0) * k;
@@ -432,7 +447,7 @@ impl Game {
             f.light(LightDef { x, y: y + 6.0, z: 40.0, r: 150.0, col: [1.3, 0.8, 0.45], flicker: 0.7 });
         }
         // Deko: Schädel, Kerzen, Kanone und Fässer an festen Stellen
-        for (name, tx, ty) in [("skullpile", 10, 36), ("candles1", 5, 36), ("barrels", 16, 29), ("cannon", 12, 23), ("crates", 6, 17), ("swordGrave0", 9, 11), ("anchorDeco", 40, 11), ("barrels", 47, 11), ("candles2", 7, 36)] {
+        for (name, tx, ty) in [("skullpile", 10, 36), ("candles1", 5, 36), ("barrels", 16, 29), ("cannon", 12, 23), ("crates", 6, 17), ("swordGrave0", 9, 11), ("crates", 40, 11), ("barrels", 47, 11), ("candles2", 7, 36)] {
             if let Some(p) = art.props.get(name) {
                 f.world_q(0.3, Frame::quad_spr(&p.spr, tx as f32 * TS + TS * 0.5, (ty + 1) as f32 * TS, &SprOpt { tint: [190, 175, 170, 255], ..Default::default() }));
             }

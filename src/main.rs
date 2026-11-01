@@ -89,6 +89,8 @@ fn setup(world: &mut bevy::ecs::world::World) {
         }
     }
     info!("Welt erzeugt");
+    // nur der Browser liest die Testlauf-Parameter (nativ bleibt das Spiel unverändert)
+    #[allow(unused_mut)]
     let mut game = Game::new();
     // Testläufe: ?play startet sofort ein neues Spiel, &pos=x,y setzt den Spieler auf eine Kachel
     #[cfg(target_arch = "wasm32")]
