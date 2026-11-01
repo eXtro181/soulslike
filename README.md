@@ -2,6 +2,8 @@
 
 Ein 2D-Dark-Fantasy-Soulslike / Metroidvania im Browser in **HD-Pixelart**: dynamisches Licht mit Normalmaps, mehrlagige Parallax-Kulisse, Aschepartikel. Geschrieben in **Rust mit Bevy 0.16** und eigenem wgpu-Renderer (WebGL2). Alle Grafiken, Musik und Klänge entstehen beim Start aus Code – es gibt keine Bild- oder Audiodateien.
 
+**Live spielen:** https://extro181.github.io/soulslike/
+
 Hervorgegangen aus *Throne of the Drowned* ([`eXtro181/PirateGame`](https://github.com/eXtro181/PirateGame), Historie in diesem Repo): Die Piraten- und Seemechaniken sind entfernt, das Meer ist zu Pech und Asche geworden, die Schiffe liegen versteinert in den Klippen.
 
 ## Das Spiel
