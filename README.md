@@ -2,7 +2,9 @@
 
 Ein düsteres Soulslike-Piratenspiel im Browser in **HD-Pixelart** mit HD-2D-Look (Diorama-Kippung, Tiefenschärfe, Punktlichter, Nebel). Geschrieben in **Rust mit Bevy 0.16** und eigenem wgpu-Renderer (WebGL2). Alle Grafiken, Musik und Klänge entstehen beim Start aus Code – es gibt keine Bild- oder Audiodateien.
 
-Live: https://extro181.github.io/PirateGame/
+Live (Original): https://extro181.github.io/PirateGame/
+
+> Dieses Repo ist ein vollständiger Klon von [`eXtro181/PirateGame`](https://github.com/eXtro181/PirateGame) – Code mit ganzer Git-Historie, alle Anleitungen und das Graphify-Abbild – als Grundlage für ein neues Projekt. Einstieg: [`CLAUDE.md`](CLAUDE.md), [`docs/MECHANIK_UND_STEUERUNG.md`](docs/MECHANIK_UND_STEUERUNG.md), [`docs/GRAFIK_ANLEITUNG.md`](docs/GRAFIK_ANLEITUNG.md), [`docs/GRAPHIFY.md`](docs/GRAPHIFY.md).
 
 ## Das Spiel
 
@@ -10,7 +12,7 @@ Live: https://extro181.github.io/PirateGame/
 - Galionsfiguren der Könige auf die Throne, alle Seeungeheuer versenkt – dann öffnet sich der **Strudel**, Krakenarme ziehen dein Schiff hinab ans **Ende der Welt**: Seeschlacht gegen den Fliegenden Holländer und seinen roten Kraken, das Meer läuft über den Rand, und am Grund wartet **Malakor, der Ertrunkene König**. Danach Neues Spiel+.
 - Siedlungen mit begehbaren Läden, Crew mit eigenen Geschützen, Schiffsausbauten, Höhenebenen mit Hängen und Naturwegen, Profile mit verschlüsselten Spielständen (PBKDF2 + AES-GCM).
 
-Das vollständige Spielkonzept (Idee, Welt, Systeme, Grafik, Klang, Technik) steht in [`docs/SPIELKONZEPT.md`](docs/SPIELKONZEPT.md), die Grafik bis ins Detail mit Nachbau-Anleitung in [`docs/GRAFIK_ANLEITUNG.md`](docs/GRAFIK_ANLEITUNG.md).
+Das vollständige Spielkonzept (Idee, Welt, Systeme, Grafik, Klang, Technik) steht in [`docs/SPIELKONZEPT.md`](docs/SPIELKONZEPT.md), die Grafik bis ins Detail mit Nachbau-Anleitung in [`docs/GRAFIK_ANLEITUNG.md`](docs/GRAFIK_ANLEITUNG.md), alle Spielregeln, Werte und die Steuerung in [`docs/MECHANIK_UND_STEUERUNG.md`](docs/MECHANIK_UND_STEUERUNG.md), die ursprüngliche Grafik-Spezifikation in [`docs/GRAFIK_SPEZIFIKATION.md`](docs/GRAFIK_SPEZIFIKATION.md) und der Code-Graph in [`docs/GRAPHIFY.md`](docs/GRAPHIFY.md).
 
 ## Steuerung
 

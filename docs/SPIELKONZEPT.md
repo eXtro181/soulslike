@@ -12,7 +12,7 @@ Stand: 1. November 2026 (Version 0.6, Zweig `perf`). Technische Kurzreferenz fü
 | **Titel** | Throne of the Drowned (Arbeitstitel bis Oktober 2026: „Schwarzwasser“) |
 | **Genre** | Soulslike-Action-RPG mit Seefahrt, Top-Down-3/4-Sicht |
 | **Plattform** | Browser (Desktop und iPhone), WebGL2, läuft ohne Installation |
-| **Live** | https://extro181.github.io/PirateGame/ |
+| **Live** | https://extro181.github.io/PirateGame/ (Original; dieser Klon: https://extro181.github.io/soulslike/ nach Aktivierung von GitHub Pages) |
 | **Sprache** | Deutsch (alle Texte, Dialoge, Menüs) |
 | **Technik** | Rust + Bevy 0.16 mit eigenem wgpu-Renderer, kompiliert nach WebAssembly |
 | **Besonderheit** | Keine einzige Bild- oder Audiodatei: Grafik, Welt, Musik und Klänge entstehen beim Start aus Code |
