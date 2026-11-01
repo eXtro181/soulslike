@@ -2,7 +2,8 @@ name: Auf GitHub Pages veröffentlichen
 
 on:
   push:
-    branches: [main]
+    # main und der aktuelle Standardzweig (solange es noch kein main gibt)
+    branches: [main, claude/adoring-fermi-02zsb6]
   workflow_dispatch:
 
 permissions:
@@ -34,6 +35,7 @@ jobs:
         run: |
           if [ -x /tmp/binaryen-version_123/bin/wasm-opt ]; then export WASM_OPT=/tmp/binaryen-version_123/bin/wasm-opt; fi
           PROFILE=release ./build.sh
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
